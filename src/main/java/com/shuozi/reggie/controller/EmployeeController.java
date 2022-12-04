@@ -88,7 +88,19 @@ public class EmployeeController
 
         employeeService.page(pageInfo, lambdaQueryWrapper);
 
+
         return R.success(pageInfo);
+    }
+
+//    更新账号状态   传递进来的Long类型丢失精度  要添加类型转换器
+    @PutMapping
+    public R<String> changeStatus(HttpServletRequest request ,@RequestBody Employee employee)
+    {
+        Long userId  = (Long) request.getSession().getAttribute("employee");
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(userId);
+        employeeService.updateById(employee);
+        return R.success("保存成功");
     }
 
 }
