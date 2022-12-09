@@ -57,14 +57,15 @@ public class EmployeeController
 
 //    保存添加员工的信息
     @PostMapping
-    public R<String> add(HttpServletRequest request,@RequestBody Employee employee)
+    public R<String> save(HttpServletRequest request,@RequestBody Employee employee)
     {
         log.info("添加进来的员工的是{}",employee.toString());
-        Long userId = (Long) request.getSession().getAttribute("employee");
-        employee.setCreateUser(userId);
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(userId);
+//        下面注释的用mybatisplus的公共字段自动填充编写
+//        Long userId = (Long) request.getSession().getAttribute("employee");
+//        employee.setCreateUser(userId);
+//        employee.setCreateTime(LocalDateTime.now());
+//        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setUpdateUser(userId);
 //        设置初始密码
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
         employeeService.save(employee);
@@ -92,15 +93,28 @@ public class EmployeeController
         return R.success(pageInfo);
     }
 
-//    更新账号状态   传递进来的Long类型丢失精度  要添加类型转换器
+//    更新账号状态   根据id修改员工信息   传递进来的Long类型丢失精度  要添加类型转换器
     @PutMapping
-    public R<String> changeStatus(HttpServletRequest request ,@RequestBody Employee employee)
+    public R<String> update(HttpServletRequest request ,@RequestBody Employee employee)
     {
-        Long userId  = (Long) request.getSession().getAttribute("employee");
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(userId);
+        //        下面注释的用mybatisplus的公共字段自动填充编写
+//        Long userId  = (Long) request.getSession().getAttribute("employee");
+//        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setUpdateUser(userId);
         employeeService.updateById(employee);
         return R.success("保存成功");
     }
 
+//    修改员工信息
+    @GetMapping("/{id}")
+    public R<Employee> getById(@PathVariable Long id)
+    {
+        log.info("正在修改员工信息...");
+        if (id!=null)
+        {
+            Employee emp = employeeService.getById(id);
+            return R.success(emp);
+        }
+        return R.error("未获取到这个人的信息");
+    }
 }

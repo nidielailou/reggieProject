@@ -2,6 +2,7 @@ package com.shuozi.reggie.filter;
 
 
 import com.alibaba.fastjson.JSON;
+import com.shuozi.reggie.common.BaseContext;
 import com.shuozi.reggie.common.R;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.util.AntPathMatcher;
@@ -52,6 +53,9 @@ public class LoginCheckFilter implements Filter
         if (httpServletRequest.getSession().getAttribute("employee")!= null)
         {
             log.info("用户已登录，员工的id为{}",httpServletRequest.getSession().getAttribute("employee"));
+//            此处添加ThreadLocal的set进行存储 登录进来的员工得id
+            Long l = (Long) httpServletRequest.getSession().getAttribute("employee");
+            BaseContext.setCurrentLocal(l);
             filterChain.doFilter(httpServletRequest,httpServletResponse);
             return;
         }
