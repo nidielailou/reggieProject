@@ -33,5 +33,5 @@ public class WebMvcConfig implements WebMvcConfigurer
         converter.setObjectMapper(new JacksonObjectMapper());
 //        要把自己配置的放在最前面优先加载
         converters.add(0,converter);
-    }
+    } 
 }
