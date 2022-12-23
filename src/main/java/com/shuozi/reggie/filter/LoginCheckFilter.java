@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.websocket.HandshakeResponse;
 import java.io.IOException;
 
+//暂时修改了过滤器  让登录不验证
 @WebFilter(filterName = "loginCheckFilter",urlPatterns = "/*")
 @Log4j2
 public class LoginCheckFilter implements Filter
@@ -40,7 +41,9 @@ public class LoginCheckFilter implements Filter
           "/backend/**",
             "/front/**",
             "/employee/login",
-            "/employee/logout"
+            "/employee/logout",
+            "/user/login",   //移动端登陆
+            "/user/sendMsg"  //移动端发送短信
         };
         boolean b = checkUrl(s, requestURI);
 
@@ -49,7 +52,7 @@ public class LoginCheckFilter implements Filter
             filterChain.doFilter(httpServletRequest,httpServletResponse);
             return;
         }
-
+//    判断登陆状态  如果已登录直接放行
         if (httpServletRequest.getSession().getAttribute("employee")!= null)
         {
             log.info("用户已登录，员工的id为{}",httpServletRequest.getSession().getAttribute("employee"));
@@ -59,6 +62,18 @@ public class LoginCheckFilter implements Filter
             filterChain.doFilter(httpServletRequest,httpServletResponse);
             return;
         }
+//      移动端判断
+        if (httpServletRequest.getSession().getAttribute("user")!= null)
+        {
+            log.info("移动端已登录，员工的id为{}",httpServletRequest.getSession().getAttribute("user"));
+//            此处添加ThreadLocal的set进行存储 登录进来的员工得id
+            Long userId = (Long) httpServletRequest.getSession().getAttribute("user");
+            BaseContext.setCurrentLocal(userId);
+            filterChain.doFilter(httpServletRequest,httpServletResponse);
+            return;
+        }
+
+
         log.info("用户未登录");
         httpServletResponse.getWriter().write(JSON.toJSONString(R.error("NOTLOGIN")));
 

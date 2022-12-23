@@ -1,7 +1,7 @@
 package com.shuozi.reggie.common;
 
 /**
- * 由于filter编写和controller和公共字段填充是一个线程  所以可以使用 threadlocal 把http的员工id填写到公共填充字段中
+ * 由于filter编写和controller和公共字段填充是一个线程  所以可以使用 thread local 把http的员工id填写到公共填充字段中
  */
 public class BaseContext {
 
@@ -16,4 +16,5 @@ public class BaseContext {
     {
         return thread.get();
     }
+
 }

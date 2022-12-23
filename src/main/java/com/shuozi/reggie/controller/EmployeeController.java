@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shuozi.reggie.common.R;
 import com.shuozi.reggie.entity.Employee;
+import com.shuozi.reggie.service.EmployeeService;
 import com.shuozi.reggie.service.impl.EmployeeServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -23,7 +24,7 @@ import java.time.LocalDateTime;
 public class EmployeeController
 {
     @Autowired
-    EmployeeServiceImpl employeeService ;
+    EmployeeService employeeService ;
 
     @PostMapping("/login")
     public R<Employee> login(HttpServletRequest request , @RequestBody Employee employee)

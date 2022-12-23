@@ -35,4 +35,11 @@ public class GlobalExceptionHandler
         return R.error(ex.getMessage());
     }
 
+    @ExceptionHandler(CustomExceptionDemo.class)
+    public R<String> ioExceptionHandler(CustomExceptionDemo ex)
+    {
+        log.info(ex.getMessage());
+        return R.error(ex.getMessage());
+    }
+
 }

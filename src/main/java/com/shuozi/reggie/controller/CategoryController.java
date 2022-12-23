@@ -9,6 +9,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/category")
 @Log4j2
@@ -58,5 +60,18 @@ public class CategoryController
            cateGoryService.updateById(category);
            return R.success("数据修改成功");
       }
+
+//"把菜品分类下拉框添加到菜品管理中"   通过type去查找
+    @GetMapping("/list")
+    public R<List<Category>> listCategory(Long category)
+    {
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(category!=null,Category::getType,category);//.getType()
+        queryWrapper.orderByAsc(Category::getSort).orderByDesc(Category::getUpdateTime);
+
+        List<Category> list = cateGoryService.list(queryWrapper);
+
+        return R.success(list);
+    }
 
 }
